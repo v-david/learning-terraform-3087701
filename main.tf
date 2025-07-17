@@ -42,7 +42,7 @@ module "blog_autoscaling" {
   max_size            = 2
 
   vpc_zone_identifier = module.blog_vpc.public_subnets
-  traffic_source_identifier = module.alb.target_groups["ex_http"].arn
+  #traffic_source_identifier = module.alb.target_groups["ex_http"].arn
   security_groups     = [module.blog_sg.security_group_id]
 
   instance_type       = var.instance_type
