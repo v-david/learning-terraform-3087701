@@ -42,11 +42,18 @@ module "blog_autoscaling" {
   max_size            = 2
 
   vpc_zone_identifier = module.blog_vpc.public_subnets
-  traffic_source_identifier = module.alb.target_groups["ex_http"].arn
   security_groups     = [module.blog_sg.security_group_id]
 
   instance_type       = var.instance_type
   image_id            = data.aws_ami.app_ami.id
+
+  # Traffic source attachment
+  traffic_source_attachments = {
+    ex-alb = {
+      traffic_source_identifier = module.alb.target_groups["ex_asg"].arn
+      traffic_source_type       = "elbv2" # default
+    }
+  }  
 }
 
 module "blog_alb" {
@@ -62,7 +69,7 @@ module "blog_alb" {
   security_groups    = [module.blog_sg.security_group_id]
 
   target_groups = {
-    "ex_http" = {
+    ex_http = {
       name_prefix      = "blog-"
       backend_protocol = "HTTP"
       backend_port     = 80
@@ -71,10 +78,13 @@ module "blog_alb" {
   }
 
   listeners = {
-    http_tcp_listeners = {
+    ex_http = {
       port     = 80
       protocol = "HTTP"
-      target_group_index = 0
+
+      forward = {
+        target_group_key = "ex_asg"
+      }
     }
   }
 
