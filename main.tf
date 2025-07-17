@@ -62,7 +62,7 @@ module "blog_alb" {
   security_groups    = [module.blog_sg.security_group_id]
 
   target_groups = {
-    "ex-instance" = {
+    {
       name_prefix      = "blog-"
       backend_protocol = "HTTP"
       backend_port     = 80
