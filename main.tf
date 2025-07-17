@@ -19,6 +19,6 @@ resource "aws_instance" "web" {
   instance_type = "t3.micro"
   region = "us-east-2"
   tags = {
-    Name = "HelloWorld2"
+    Name = "HelloWorld"
   }
 }
