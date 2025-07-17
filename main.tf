@@ -42,7 +42,7 @@ module "blog_autoscaling" {
   max_size            = 2
 
   vpc_zone_identifier = module.blog_vpc.public_subnets
-  target_group_arns   = module.blog_alb.target_group_arns[0]
+  traffic_source_identifier = module.alb.target_groups["ex_http"].arn
   security_groups     = [module.blog_sg.security_group_id]
 
   instance_type       = var.instance_type
@@ -61,14 +61,14 @@ module "blog_alb" {
   subnets            = module.blog_vpc.public_subnets
   security_groups    = [module.blog_sg.security_group_id]
 
-  target_groups = [
-    {
+  target_groups = {
+    ex_http = {
       name_prefix      = "blog-"
       backend_protocol = "HTTP"
       backend_port     = 80
       target_type      = "instance"
     }
-  ]
+  }
 
   listeners = {
     http_tcp_listeners = {
