@@ -70,12 +70,18 @@ module "blog_alb" {
 
   target_groups = {
     ex_asg = {
-      name_prefix      = "blog-"
-      backend_protocol = "HTTP"
-      backend_port     = 80
-      target_type      = "instance"
+      backend_protocol                  = "HTTP"
+      backend_port                      = 80
+      target_type                       = "instance"
+      deregistration_delay              = 5
+      load_balancing_cross_zone_enabled = true
+
+      # There's nothing to attach here in this definition.
+      # The attachment happens in the ASG module above
+      create_attachment = false
     }
   }
+
 
   listeners = {
     ex_http = {
