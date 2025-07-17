@@ -42,7 +42,7 @@ module "blog_autoscaling" {
   max_size = 2
 
   vpc_zone_identifier = modules.blog_vpc.public_subnets
-  target_group_arns   = module.blog_alb.target_groups.arns
+  target_group_arns   = module.blog_alb.target_groups[ex-instance].arn
   security_groups     = [module.blog_sg.security_group_id]
 
   image_id      = data.aws_ami.app_ami.id
@@ -58,7 +58,7 @@ module "blog_alb" {
   security_groups = [module.blog_sg.security_group_id]
 
   target_groups = [
-    {
+    ex-instance = {
       name_prefix      = "blog"
       protocol         = "HTTP"
       port             = 80
